@@ -1,0 +1,78 @@
+﻿@model IEnumerable<Publicaciones.Models.Publicacion>
+@section Publis{
+    <link rel="stylesheet" href="~/css/publi.css" />
+}
+<form method="post" action="Home/CrearPubli">
+    <div class="form-group">
+        <label for="texto">Texto</label>
+        <input class="form-control" name="texto" placeholder="Publicar" required/>
+    </div>
+    <input type="submit" class="btn btn-primary" value="Enviar"/>
+</form>
+
+<br>
+<br>
+<br>
+
+<div class="col-12">
+    @foreach (var item in Model)
+    {   
+        <div class="card bg-info">
+            <div class="row">
+                <div class="col-2">
+                    <a asp-action="Perfil">
+                        <img src="~/img/default-avatar.png" class="perfil-Publi" alt="Perfil">
+                    </a>
+                </div>
+                <div class="col">
+                    <div class="card-header row">
+                        <div class="col">
+                            <a asp-action="Perfil">@item.UsuarioID</a>
+                            <a>@item.Fecha.ToShortTimeString()</a>
+                            <a> · </a>
+                            <a>@item.Fecha.ToLongDateString()</a>
+                        </div>
+                        <div class="col-2">
+                            <div class="dropdown">
+                                <button class="btn-sm" type="button" id="publi-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-ellipsis-h fa-lg"></i>
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="publi-menu">
+                                    
+                                    <form asp-action="BorrarPubli" asp-route-id="@item.PublicacionID">
+                                        <input type="hidden" asp-for="@item.PublicacionID"/>
+                                        <input type="submit" value="Borrar" class="dropdown-item"/>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">@item.Texto</p>
+                    </div>
+                    <div class="card-footer">
+                        <div class="row publi-func">
+                            <div class="col">
+                                <a asp-action="Perfil">
+                                    <i class="fas fa-smile fa-lg"></i>
+                                </a>
+                            </div>
+                            <div class="col">
+                                <a asp-action="Perfil">
+                                    <i class="fas fa-comment-dots fa-lg"></i>
+                                </a>
+                            </div>
+                            <div class="col">
+                                <a asp-action="Perfil">
+                                    <i class="fas fa-share-alt fa-lg"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+    }
+</div>

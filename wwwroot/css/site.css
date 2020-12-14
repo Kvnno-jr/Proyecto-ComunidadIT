@@ -1,0 +1,123 @@
+﻿body {
+  background-color: #00726a;
+  width: 100%;
+  font-family: 'Lato', sans-serif;
+  color: white;
+}
+
+.container {
+  width: 740px;
+  min-height: 100vh;
+}
+
+
+/***********************COLUMNAS***********************/
+.wrapper {
+  display: flex;
+  width: 100%;
+  align-items: stretch;
+}
+
+#IzqSidebar , #DerSidebar {
+  width: 300px;
+  position: fixed;
+  top: 0;
+  z-index: 999;
+  min-width: 300px;
+  max-width: 300px;
+  height: 100vh;
+  background: #084949;
+  color: #fff;
+  transition: all 0.2s;
+}
+
+#IzqSidebar {
+  left: 0;
+}
+
+#DerSidebar {
+  right: 0;
+}
+
+#IzqSidebar.active {
+  margin-left: -300px;
+}
+
+#DerSidebar.active {
+  margin-right: -300px;
+}
+
+a[data-toggle="collapse"] {
+  position: relative;
+}
+
+.dropdown-toggle::after {
+  display: block;
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+}
+
+@media (max-width: 768px) {
+  #IzqSidebar {
+    margin-left: -300px;
+  }
+  #IzqSidebar.active {
+    margin-left: 0;
+  }
+  #DerSidebar {
+    margin-right: -300px;
+  }
+  #DerSidebar.active {
+    margin-right: 0;
+  }
+}
+
+a, a:hover, a:focus {
+  color: inherit;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+#IzqSidebar ul.items , #DerSidebar ul.items {
+  padding: 20px 0;
+}
+
+#IzqSidebar ul li a , #DerSidebar ul li a{
+  padding: 10px;
+  font-size: 1.1em;
+  display: block;
+  padding-left: 60px;
+}
+
+#IzqSidebar ul li a:hover , #DerSidebar ul li a:hover {
+  color: #077c7c;
+  background: #b6fafa;
+}
+
+.input-usuario {
+  margin-top: 20px;
+  margin-left: 60px;
+  margin-right: 30px;
+}
+
+img {
+  border: 1px solid rgba(192, 255, 239, 0.226);
+  border-radius: 50%;
+}
+
+.perfil-cIzq{
+  width: 200px;
+  margin-left: 60px;
+  position: absolute;
+  bottom: 6vh;
+}
+
+img:hover {
+  box-shadow: 0 0 2px 1px rgba(140, 194, 180, 0.5);
+}
+
+.mCSB_container{
+  height: 100%;
+}

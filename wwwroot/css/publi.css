@@ -1,0 +1,49 @@
+.perfil-Publi{
+    width: 50px;
+    margin: 9px;
+    margin-top: 6px;
+}
+
+.card-header{
+    border: none;
+    background-color: rgb(0 0 0 / 0);
+    height: 28px;
+    padding: 1px;
+}
+
+.card-body{
+    min-height: 36px;
+    padding: 1px;
+    padding-right: 32px;
+    max-width: 609px;
+}
+
+.card-footer{
+    border: none;
+    background-color: rgb(0 0 0 / 0);
+    height: 35px;
+}
+
+.col-2{
+    max-width: 9.666667%; 
+}
+
+.publi-func{
+    margin: 0px;
+    margin-top: -8px;
+}
+
+.bg-info{
+    background-color: #084949!important;
+}
+
+a{
+    font-size: large;
+}
+
+#publi-menu{
+    border-radius: 50%;
+    background-color: transparent;
+    border: none;
+    outline: none;
+}
