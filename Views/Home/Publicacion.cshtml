@@ -1,6 +1,211 @@
 @model Publicaciones.Models.PubliViewModel
-@foreach (var item in Model.Publicacion)
+@section Publis
 {
-    <a>@item.PublicacionID</a>
+    <link rel="stylesheet" href="~/css/publi.css" />
+}
+
+<div class="card bg-info">
+    <div class="row">
+
+        <div class="col-2">
+            <a asp-action="Perfil">
+                <img src="~/img/default-avatar.png" class="perfil-Publi" alt="Perfil">
+            </a>
+        </div>
+
+        <div class="col">
+
+            <div class="card-header row">
+                <div class="col">
+                    <a asp-action="Perfil">@Model.Publicacion.UsuarioID</a>
+                    <a>@Model.Publicacion.Fecha.ToShortTimeString()</a>
+                    <a> · </a>
+                    <a>@Model.Publicacion.Fecha.ToLongDateString()</a>
+                </div>
+                <div class="col-2">
+                    <div class="dropdown">
+                        <button class="btn-sm" type="button" id="publi-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-ellipsis-h fa-lg"></i>
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="publi-menu">
+                            
+                            <form asp-action="BorrarPubli" asp-route-id="@Model.Publicacion.PublicacionID">
+                                <input type="submit" value="Borrar" class="dropdown-item"/>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <p class="card-text">@Model.Publicacion.Texto</p>
+            </div>
+
+            <div class="card-footer">
+                <div class="row publi-func">
+                    <div class="col">
+                        <a asp-action="Perfil">
+                            <i class="fas fa-smile fa-lg"></i>
+                        </a>
+                    </div>
+                    <div class="col">
+                        <a asp-action="Perfil">
+                            <i class="fas fa-share-alt fa-lg"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+@foreach(var coment in Model.Comentario)
+{
+    <div class="card bg-info">
+        <div class="row">
+
+            <div class="col-2">
+                <a asp-action="Perfil">
+                    <img src="~/img/default-avatar.png" class="perfil-Publi" alt="Perfil">
+                </a>
+            </div>
+
+            <div class="col">
+
+                <div class="card-header row">
+                    <div class="col">
+                        <a asp-action="Perfil">@coment.UsuarioID</a>
+                        <a>@coment.Fecha.ToShortTimeString()</a>
+                        <a> · </a>
+                        <a>@coment.Fecha.ToLongDateString()</a>
+                    </div>
+                    <div class="col-2">
+                        <div class="dropdown">
+                            <button class="btn-sm" type="button" id="publi-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-ellipsis-h fa-lg"></i>
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="publi-menu">
+                                
+                                <form asp-action="BorrarComent" asp-route-id="@coment.ComentarioID">
+                                    <input type="submit" value="Borrar" class="dropdown-item"/>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <p class="card-text">@coment.Texto</p>
+                </div>
+
+                <div class="card-footer">
+                    <div class="row publi-func">
+                        <div class="col">
+                            <a asp-action="Perfil">
+                                <i class="fas fa-smile fa-lg"></i>
+                            </a>
+                        </div>
+
+                        <div class="col">
+                            <a asp-action="Perfil">
+                                <i class="fas fa-comment-dots fa-lg"></i>
+                            </a>
+                        </div>
+
+                        <div class="col">
+                            <a asp-action="Perfil">
+                                <i class="fas fa-share-alt fa-lg"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div> <!--col-->
+        </div> <!--row-->
+    </div> <!--card bg-info-->
+
+
+
+    @foreach(var resp in Model.Respuesta)
+    {
+        if (coment.ComentarioID == resp.ComentarioID)
+        {
+            <div class="card bg-info">
+                <div class="row">
+
+                    <div class="col-2">
+                        <a asp-action="Perfil">
+                            <img src="~/img/default-avatar.png" class="perfil-Publi" alt="Perfil">
+                        </a>
+                    </div>
+
+                    <div class="col">
+
+                        <div class="card-header row">
+                            <div class="col">
+                                <a asp-action="Perfil">@resp.UsuarioID</a>
+                                <a>@resp.Fecha.ToShortTimeString()</a>
+                                <a> · </a>
+                                <a>@resp.Fecha.ToLongDateString()</a>
+                            </div>
+                            <div class="col-2">
+                                <div class="dropdown">
+                                    <button class="btn-sm" type="button" id="publi-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-ellipsis-h fa-lg"></i>
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="publi-menu">
+                                        
+                                        <form asp-action="BorrarResp" asp-route-id="@resp.RespuestaID">
+                                            <input type="submit" value="Borrar" class="dropdown-item"/>
+                                        </form>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+                            <p class="card-text">@resp.Texto</p>
+                        </div>
+
+                        <div class="card-footer">
+                            <div class="row publi-func">
+                                <div class="col">
+                                    <a asp-action="Perfil">
+                                        <i class="fas fa-smile fa-lg"></i>
+                                    </a>
+                                </div>
+                                <div class="col">
+                                    <a asp-action="Perfil">
+                                        <i class="fas fa-share-alt fa-lg"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!--col-->
+                </div> <!--row-->
+            </div> <!--card bg-info-->
+        }
+    }
+    <form method="post" asp-action="CrearResp" asp-route-id="@coment.ComentarioID">
+            <div class="form-group">
+                <input class="form-control" name="texto" placeholder="Responder" required/>
+            </div>
+        <input type="submit" class="btn btn-primary" value="Enviar"/>
+    </form>
     <br>
 }
+
+<br>
+<form method="post" asp-action="CrearComent" asp-route-id="@Model.Publicacion.PublicacionID">
+    <div class="form-group">
+        <label for="texto">Texto</label>
+        <input class="form-control" name="texto" placeholder="Publicar" required/>
+    </div>
+    <input type="submit" class="btn btn-primary" value="Enviar"/>
+</form>
+<br>

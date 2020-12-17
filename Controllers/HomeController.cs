@@ -19,120 +19,130 @@ namespace Publicaciones.Controllers
             this.logger = logger;
             this.db=contexto;
         }
+
         public IActionResult Index()
         {
             Usuario u_sesion = HttpContext.Session.Get<Usuario>("UsuarioLogueado");
-            var publicaciones = new List<Publicacion>();
-            foreach (var seguido in db.Seguido.ToList())
+            var m = new IndexViewModel();
+            var p = new List<Publicacion>();
+            m.Seguido = db.Seguido.Where(s => s.UsuarioID == u_sesion.UsuarioID).ToList();
+            foreach(var publi in db.Publicacion.ToList())
             {
-                if (seguido.UsuarioID == u_sesion.UsuarioID)
+                foreach (var seguido in m.Seguido.Where(s => s.A_Seguir == publi.UsuarioID))
                 {
-                    foreach (var publicacion in db.Publicacion.ToList())
-                    {
-                        if ( (publicacion.UsuarioID == seguido.A_Seguir) )
-                        {
-                            publicaciones.Add(publicacion);
-                        }
-                    } 
+                    p.Add(publi);
+                }
+                if(publi.UsuarioID == u_sesion.UsuarioID)
+                {
+                    p.Add(publi);
                 }
             }
-            foreach (var publicacion in db.Publicacion.ToList())
-            {
-                if (( publicacion.UsuarioID == u_sesion.UsuarioID ))
-                {
-                    publicaciones.Add(publicacion);
-                }
-            }
-            return View(publicaciones.OrderByDescending(t => t.Fecha));
+            m.Publicacion = p.OrderByDescending(f => f.Fecha).ToList();
+            return View(m);
         }
         public IActionResult Perfil()
         {
             return View();
         }
-
-        public IActionResult Publicacion()
+        public IActionResult Publicacion(int ID)
         {
-            var modelo = new PubliViewModel();
-            modelo.Publicacion = db.Publicacion.ToList();
-            /*modelo.Comentario = db.Comentario.ToList();
-            modelo.Respuesta = db.Respuesta.ToList();
-            modelo.Like = db.Like.ToList();*/
-            return View(modelo);
+            var m = new PubliViewModel();
+            var r = new List<Respuesta>();
+            m.Publicacion = db.Publicacion.Find(ID);
+            m.Comentario = db.Comentario.Where(c => c.PublicacionID == m.Publicacion.PublicacionID).OrderBy(f => f.Fecha).ToList();
+            foreach (var coment in m.Comentario.ToList())
+            {
+                foreach (var resp in db.Respuesta.Where(r => r.ComentarioID == coment.ComentarioID).ToList())
+                {
+                    r.Add(resp);
+                }
+            }
+            m.Respuesta = r.OrderBy(f => f.Fecha).ToList();
+            m.Like = db.Like.ToList();
+            return View(m);
         }
 
 
         /****** ACCIONES USUARIOS *****/
 
 
-        public JsonResult CrearUsuario(string nickname)
+        public JsonResult CrearUsuario(string user)
         {
             Usuario usuario = new Usuario
             {
-                UsuarioID = nickname,
+                UsuarioID = user,
             };
             db.Usuario.Add(usuario);
             db.SaveChanges();
             return Json(usuario);
         }
-        public JsonResult BorrarUsuario(string nickname)
+        public JsonResult BorrarUsuario(string user)
         {
-            Usuario usuario = db.Usuario.Find(nickname);
-            db.Usuario.Remove(usuario);
+            foreach (var seguido in db.Seguido.Where(s => (s.UsuarioID == user) || (s.A_Seguir == user)))
+            {
+                db.Seguido.Remove(seguido);
+            }
+            foreach (var seguidor in db.Seguidor.Where(s => (s.Un_Seguidor == user) || (s.UsuarioID == user)))
+            {
+                db.Seguidor.Remove(seguidor);
+            }
+            foreach (var publicacion in db.Publicacion.Where(s => s.UsuarioID == user))
+            {
+                foreach (var comentario in db.Comentario.Where(c => (c.PublicacionID == publicacion.PublicacionID) || (c.UsuarioID == user)))
+                {
+                    foreach (var respuesta in db.Respuesta.Where(r => (r.ComentarioID == comentario.ComentarioID) || (r.UsuarioID == user)))
+                    {
+                        db.Respuesta.Remove(respuesta);
+                    }
+                    db.Comentario.Remove(comentario);
+                }
+                db.Publicacion.Remove(publicacion);
+            }
+            db.Usuario.Remove(db.Usuario.Find(user));
             db.SaveChanges();
-            return Json(usuario);
+            return Json(db.Usuario.ToList());
         }
-        public JsonResult AgregarSesion(string nickname)
+        public JsonResult AgregarSesion(string user)
         {
-        /*  https://localhost:5001/home/agregarsesion?nickname=kevinojea    */
-        /*  https://localhost:5001/home/agregarsesion?nickname=pablomota    */
-        /*  https://localhost:5001/home/agregarsesion?nickname=enriquekike  */
             Usuario u_sesion = new Usuario
             {
-                UsuarioID = nickname,
+                UsuarioID = user,
             };
             HttpContext.Session.Set<Usuario>("UsuarioLogueado", u_sesion);
             return Json(u_sesion);
         }
-        public JsonResult ConsultarSesion()
-        /*  https://localhost:5001/home/consultarsesion */
-        {
-            Usuario u_sesion = HttpContext.Session.Get<Usuario>("UsuarioLogueado");
-            return Json(u_sesion);
-        }
-        public JsonResult Seguir (string usuario)
+        /*  https://localhost:5001/home/agregarsesion?user=coco */
+        /*  https://localhost:5001/home/agregarsesion?user=lola */
+        /*  https://localhost:5001/home/agregarsesion?user=toby */
+        /*  https://localhost:5001/home/agregarsesion?user=mora */
+        public IActionResult Seguir (string user)
         {
             Usuario u_sesion = HttpContext.Session.Get<Usuario>("UsuarioLogueado");
             Seguido seguido = new Seguido
             {
-                A_Seguir = usuario,
+                A_Seguir = user,
                 UsuarioID = u_sesion.UsuarioID,
             };
             Seguidor seguidor = new Seguidor
             {
                 Un_Seguidor = u_sesion.UsuarioID,
-                UsuarioID = usuario,
+                UsuarioID = user,
             };
             db.Seguido.Add(seguido);
             db.Seguidor.Add(seguidor);
             db.SaveChanges();
             return Json(db.Seguido.ToList());
         }
-        public JsonResult DejarSeguir(string usuario)
+        public IActionResult DejarSeguir(string user)
         {
             Usuario u_sesion = HttpContext.Session.Get<Usuario>("UsuarioLogueado");
-            foreach (var seguido in db.Seguido.ToList())
+            foreach (var seguido in db.Seguido.Where(s => (s.A_Seguir == user) & (s.UsuarioID == u_sesion.UsuarioID)).ToList())
             {
-                if ( (seguido.A_Seguir == usuario) && (seguido.UsuarioID == u_sesion.UsuarioID) )
-                {
-                    db.Seguido.Remove(seguido);
-                }
+                db.Seguido.Remove(seguido);
             }
-            foreach (var seguidor in db.Seguidor.ToList())
+            foreach (var seguidor in db.Seguidor.Where(s => (s.Un_Seguidor == u_sesion.UsuarioID) & (s.UsuarioID == user)).ToList())
             {
-                if ( (seguidor.Un_Seguidor == u_sesion.UsuarioID) && (seguidor.UsuarioID == usuario) )
-                {
-                    db.Seguidor.Remove(seguidor);
-                }
+                db.Seguidor.Remove(seguidor);
             }
             db.SaveChanges();
             return Json(db.Seguido.ToList());
@@ -141,7 +151,50 @@ namespace Publicaciones.Controllers
 
         /****** ACCIONES PUBLICACIONES *****/
 
-
+        public IActionResult CrearComent (string texto, int ID)
+        {
+            Usuario u_sesion = HttpContext.Session.Get<Usuario>("UsuarioLogueado");
+            Comentario comentario = new Comentario
+            {
+                Texto = texto,
+                PublicacionID = ID,
+                UsuarioID = u_sesion.UsuarioID,
+                Fecha = DateTime.Now,
+            };
+            db.Comentario.Add(comentario);
+            db.SaveChanges();
+            return Json(db.Comentario.ToList());
+        }
+        public IActionResult BorrarComent (int ID)
+        {
+            foreach (var respuesta in db.Respuesta.Where(r => r.ComentarioID == ID).ToList())
+            {
+                db.Respuesta.Remove(respuesta);
+            }
+            db.Comentario.Remove(db.Comentario.Find(ID));
+            db.SaveChanges();
+            return Json(db.Comentario.ToList());
+        }
+        public IActionResult CrearResp (string texto, int ID)
+        {
+            Usuario u_sesion = HttpContext.Session.Get<Usuario>("UsuarioLogueado");
+            Respuesta respuesta = new Respuesta
+            {
+                Texto = texto,
+                ComentarioID = ID,
+                UsuarioID = u_sesion.UsuarioID,
+                Fecha = DateTime.Now,
+            };
+            db.Respuesta.Add(respuesta);
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+        public IActionResult BorrarResp (int ID)
+        {
+            db.Respuesta.Remove(db.Respuesta.Find(ID));
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
         public IActionResult CrearPubli(string texto)
         {
             Usuario u_sesion = HttpContext.Session.Get<Usuario>("UsuarioLogueado");
@@ -164,26 +217,19 @@ namespace Publicaciones.Controllers
         }
         public IActionResult BorrarPubli(int ID)
         {
-            Publicacion publicacion = db.Publicacion.Find(ID);
-            db.Publicacion.Remove(publicacion);
+            foreach (var comentario in db.Comentario.Where(c => c.PublicacionID == ID).ToList())
+            {
+                foreach (var respuesta in db.Respuesta.Where(r => r.ComentarioID == comentario.ComentarioID).ToList())
+                {
+                    db.Respuesta.Remove(respuesta);
+                }
+                db.Comentario.Remove(comentario);
+            }
+            db.Publicacion.Remove(db.Publicacion.Find(ID));
             db.SaveChanges();
             return RedirectToAction("Index");
         }
-        /*public JsonResult VerPublis()
-        {
-            return Json(db.Publicacion.ToList());
-        }*/
-        /*public IActionResult CrearComent (string texto, int publicacion)
-        {
-            Usuario u_sesion = HttpContext.Session.Get<Usuario>("UsuarioLogueado");
-            Comentario comentario = new Comentario
-            {
-                PublicacionID = publicacion,
-                Texto = texto,
-                UsuarioID = u_sesion.UsuarioID,
-                Fecha = DateTime.Now,
-            };
+        
 
-        }*/
     }
 }

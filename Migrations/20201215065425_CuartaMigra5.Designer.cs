@@ -9,8 +9,8 @@ using Publicaciones.Models;
 namespace Krofect.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20201214032851_TerceraMigra22")]
-    partial class TerceraMigra22
+    [Migration("20201215065425_CuartaMigra5")]
+    partial class CuartaMigra5
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -38,66 +38,17 @@ namespace Krofect.Migrations
 
                     b.HasKey("ComentarioID");
 
-                    b.HasIndex("PublicacionID");
-
                     b.ToTable("Comentario");
                 });
 
             modelBuilder.Entity("Publicaciones.Models.Like", b =>
                 {
-                    b.Property<int>("LikeID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("ComentarioID")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("PubComResID")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int?>("PublicacionID")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("RespuestaID")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("UsuarioID")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("LikeID");
-
-                    b.HasIndex("ComentarioID");
-
-                    b.HasIndex("PublicacionID");
-
-                    b.HasIndex("RespuestaID");
+                    b.HasKey("UsuarioID");
 
                     b.ToTable("Like");
-                });
-
-            modelBuilder.Entity("Publicaciones.Models.PubliViewModel", b =>
-                {
-                    b.Property<int?>("ComentarioID")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("LikeID")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("PublicacionID")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("RespuestaID")
-                        .HasColumnType("INTEGER");
-
-                    b.HasIndex("ComentarioID");
-
-                    b.HasIndex("LikeID");
-
-                    b.HasIndex("PublicacionID");
-
-                    b.HasIndex("RespuestaID");
-
-                    b.ToTable("PubliViewModel");
                 });
 
             modelBuilder.Entity("Publicaciones.Models.Publicacion", b =>
@@ -131,15 +82,19 @@ namespace Krofect.Migrations
                     b.Property<int>("ComentarioID")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("PublicacionID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Texto")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("UsuarioID")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("RespuestaID");
-
-                    b.HasIndex("ComentarioID");
+                    b.HasKey("RespuestaID", "ComentarioID", "PublicacionID");
 
                     b.ToTable("Respuesta");
                 });
@@ -191,71 +146,11 @@ namespace Krofect.Migrations
                     b.ToTable("Usuario");
                 });
 
-            modelBuilder.Entity("Publicaciones.Models.Comentario", b =>
-                {
-                    b.HasOne("Publicaciones.Models.Publicacion", null)
-                        .WithMany("Comentarios")
-                        .HasForeignKey("PublicacionID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Publicaciones.Models.Like", b =>
-                {
-                    b.HasOne("Publicaciones.Models.Comentario", null)
-                        .WithMany("Likes")
-                        .HasForeignKey("ComentarioID");
-
-                    b.HasOne("Publicaciones.Models.Publicacion", null)
-                        .WithMany("Likes")
-                        .HasForeignKey("PublicacionID");
-
-                    b.HasOne("Publicaciones.Models.Respuesta", null)
-                        .WithMany("Likes")
-                        .HasForeignKey("RespuestaID");
-                });
-
-            modelBuilder.Entity("Publicaciones.Models.PubliViewModel", b =>
-                {
-                    b.HasOne("Publicaciones.Models.Comentario", "Comentario")
-                        .WithMany()
-                        .HasForeignKey("ComentarioID");
-
-                    b.HasOne("Publicaciones.Models.Like", "Like")
-                        .WithMany()
-                        .HasForeignKey("LikeID");
-
-                    b.HasOne("Publicaciones.Models.Publicacion", "Publicacion")
-                        .WithMany()
-                        .HasForeignKey("PublicacionID");
-
-                    b.HasOne("Publicaciones.Models.Respuesta", "Respuesta")
-                        .WithMany()
-                        .HasForeignKey("RespuestaID");
-
-                    b.Navigation("Comentario");
-
-                    b.Navigation("Like");
-
-                    b.Navigation("Publicacion");
-
-                    b.Navigation("Respuesta");
-                });
-
             modelBuilder.Entity("Publicaciones.Models.Publicacion", b =>
                 {
                     b.HasOne("Publicaciones.Models.Usuario", null)
                         .WithMany("Publicaciones")
                         .HasForeignKey("UsuarioID");
-                });
-
-            modelBuilder.Entity("Publicaciones.Models.Respuesta", b =>
-                {
-                    b.HasOne("Publicaciones.Models.Comentario", null)
-                        .WithMany("Respuestas")
-                        .HasForeignKey("ComentarioID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Publicaciones.Models.Seguido", b =>
@@ -265,25 +160,6 @@ namespace Krofect.Migrations
                         .HasForeignKey("UsuarioID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Publicaciones.Models.Comentario", b =>
-                {
-                    b.Navigation("Likes");
-
-                    b.Navigation("Respuestas");
-                });
-
-            modelBuilder.Entity("Publicaciones.Models.Publicacion", b =>
-                {
-                    b.Navigation("Comentarios");
-
-                    b.Navigation("Likes");
-                });
-
-            modelBuilder.Entity("Publicaciones.Models.Respuesta", b =>
-                {
-                    b.Navigation("Likes");
                 });
 
             modelBuilder.Entity("Publicaciones.Models.Usuario", b =>

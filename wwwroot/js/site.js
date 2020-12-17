@@ -7,7 +7,6 @@ $(document).ready(function () {
     $("#IzqSidebar").mCustomScrollbar({
          theme: "minimal"
     });
-
     $('#IzqSidebarCollapse').on('click', function () {
         // open or close navbar
         $('#IzqSidebar').toggleClass('active');
@@ -17,12 +16,9 @@ $(document).ready(function () {
         // in our CSS
         $('a[aria-expanded=true]').attr('aria-expanded', 'false');
     });
-
-
     $("#DerSidebar").mCustomScrollbar({
         theme: "minimal"
    });
-
    $('#DerSidebarCollapse').on('click', function () {
        // open or close navbar
        $('#DerSidebar').toggleClass('active');
@@ -32,5 +28,10 @@ $(document).ready(function () {
        // in our CSS
        $('a[aria-expanded=true]').attr('aria-expanded', 'false');
    });
+
+   
+   
+
+
 
 });

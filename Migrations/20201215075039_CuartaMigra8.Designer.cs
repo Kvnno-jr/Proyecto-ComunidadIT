@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Publicaciones.Models;
 
 namespace Krofect.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class MContextModelSnapshot : ModelSnapshot
+    [Migration("20201215075039_CuartaMigra8")]
+    partial class CuartaMigra8
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -72,6 +74,8 @@ namespace Krofect.Migrations
 
                     b.HasKey("PublicacionID");
 
+                    b.HasIndex("UsuarioID");
+
                     b.ToTable("Publicacion");
                 });
 
@@ -86,6 +90,9 @@ namespace Krofect.Migrations
 
                     b.Property<DateTime>("Fecha")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("PublicacionID")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Texto")
                         .HasColumnType("TEXT");
@@ -107,6 +114,8 @@ namespace Krofect.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("A_Seguir", "UsuarioID");
+
+                    b.HasIndex("UsuarioID");
 
                     b.ToTable("Seguido");
                 });
@@ -141,6 +150,29 @@ namespace Krofect.Migrations
                     b.HasKey("UsuarioID");
 
                     b.ToTable("Usuario");
+                });
+
+            modelBuilder.Entity("Publicaciones.Models.Publicacion", b =>
+                {
+                    b.HasOne("Publicaciones.Models.Usuario", null)
+                        .WithMany("Publicaciones")
+                        .HasForeignKey("UsuarioID");
+                });
+
+            modelBuilder.Entity("Publicaciones.Models.Seguido", b =>
+                {
+                    b.HasOne("Publicaciones.Models.Usuario", null)
+                        .WithMany("Seguidos")
+                        .HasForeignKey("UsuarioID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Publicaciones.Models.Usuario", b =>
+                {
+                    b.Navigation("Publicaciones");
+
+                    b.Navigation("Seguidos");
                 });
 #pragma warning restore 612, 618
         }
