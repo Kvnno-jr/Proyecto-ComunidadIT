@@ -51,9 +51,9 @@ namespace Publicaciones.Models
     }
     public class Like
     {
-        public int PublicacionID {get;set;}
-        public int ComentarioID {get;set;}
-        public int RespuestaID {get;set;}
+        public int PubComResID {get;set;}
+        public string Tipo {get;set;}
+        public string UsuarioID {get;set;}
     }
     public class PubliViewModel
     {

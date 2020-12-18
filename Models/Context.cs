@@ -11,7 +11,7 @@ namespace Publicaciones.Models
         {
            modelBuilder.Entity<Seguido>().HasKey(t => new { t.A_Seguir, t.UsuarioID });
            modelBuilder.Entity<Seguidor>().HasKey(t => new { t.Un_Seguidor, t.UsuarioID });
-           modelBuilder.Entity<Like>().HasKey(t => new { t.PublicacionID, t.ComentarioID, t.RespuestaID });
+           modelBuilder.Entity<Like>().HasKey(t => new { t.PubComResID, t.Tipo, t.UsuarioID });
         }
         public DbSet<Usuario> Usuario {get;set;}
         public DbSet<Seguido> Seguido {get;set;}

@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Publicaciones.Models;
 
 namespace Krofect.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class MContextModelSnapshot : ModelSnapshot
+    [Migration("20201217191840_CuartaMigra10")]
+    partial class CuartaMigra10
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -41,16 +43,19 @@ namespace Krofect.Migrations
 
             modelBuilder.Entity("Publicaciones.Models.Like", b =>
                 {
-                    b.Property<int>("PubComResID")
+                    b.Property<int>("PublicacionID")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Tipo")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("ComentarioID")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<string>("UsuarioID")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("RespuestaID")
+                        .HasColumnType("INTEGER");
 
-                    b.HasKey("PubComResID", "Tipo", "UsuarioID");
+                    b.Property<int>("UsuarioID")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("PublicacionID", "ComentarioID", "RespuestaID");
 
                     b.ToTable("Like");
                 });

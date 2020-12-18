@@ -19,6 +19,10 @@ namespace Publicaciones.Controllers
             this.logger = logger;
             this.db=contexto;
         }
+        
+        
+
+        /****** VISTAS *****/
 
         public IActionResult Index()
         {
@@ -63,8 +67,8 @@ namespace Publicaciones.Controllers
         }
 
 
-        /****** ACCIONES USUARIOS *****/
 
+        /****** ACCIONES USUARIOS *****/
 
         public JsonResult CrearUsuario(string user)
         {
@@ -149,6 +153,7 @@ namespace Publicaciones.Controllers
         }
 
 
+
         /****** ACCIONES PUBLICACIONES *****/
 
         public IActionResult CrearComent (string texto, int ID)
@@ -229,7 +234,28 @@ namespace Publicaciones.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
-        
-
+        public IActionResult Like (int ID, string tipo)
+        {
+            Usuario u_sesion = HttpContext.Session.Get<Usuario>("UsuarioLogueado");
+            if (db.Like.Where(l => (l.PubComResID == ID) && (l.Tipo == tipo) && (l.UsuarioID == u_sesion.UsuarioID)).Count() == 0)
+            {
+                Like like = new Like
+                {
+                    PubComResID = ID,
+                    Tipo = tipo,
+                    UsuarioID = u_sesion.UsuarioID,
+                };
+                db.Like.Add(like);
+            }
+            else
+            {
+                foreach (var like in db.Like.Where(l => (l.PubComResID == ID) && (l.Tipo == tipo) && (l.UsuarioID == u_sesion.UsuarioID)))
+                {
+                    db.Like.Remove(like);
+                }
+            }
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
     }
 }
