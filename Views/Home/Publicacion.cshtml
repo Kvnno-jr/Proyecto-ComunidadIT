@@ -16,12 +16,16 @@
         <div class="col">
 
             <div class="card-header row">
-                <div class="col">
-                    <a asp-action="Perfil">@Model.Publicacion.UsuarioID</a>
-                    <a>@Model.Publicacion.Fecha.ToShortTimeString()</a>
-                    <a> · </a>
-                    <a>@Model.Publicacion.Fecha.ToLongDateString()</a>
-                </div>
+                    <div class="col-4">
+                        <p asp-action="Perfil">@Model.Publicacion.UsuarioID</p>
+                    </div>
+
+                    <div class="col row fecha">
+                        <p>@Model.Publicacion.Fecha.ToShortTimeString()</p>
+                        <p>-</p>
+                        <p>@Model.Publicacion.Fecha.ToLongDateString()</p>
+                    </div>
+
                 <div class="col-2">
                     <div class="dropdown">
                         <button class="btn-sm" type="button" id="publi-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -47,7 +51,7 @@
                     <div class="col">
                         <form asp-action="Like" asp-route-id="@Model.Publicacion.PublicacionID">
                             <input type="hidden" name="tipo" value="publi">
-                            <button type="submit" class="btn btn-info">
+                            <button type="submit">
                                 <i class="far fa-heart"></i>
                             </button>
                         </form>
@@ -64,7 +68,9 @@
     </div>
 </div>
 
-
+<br>
+<br>
+<br>
 
 @foreach(var coment in Model.Comentario)
 {
@@ -80,12 +86,16 @@
             <div class="col">
 
                 <div class="card-header row">
-                    <div class="col">
+                    <div class="col-4">
                         <a asp-action="Perfil">@coment.UsuarioID</a>
-                        <a>@coment.Fecha.ToShortTimeString()</a>
-                        <a> · </a>
-                        <a>@coment.Fecha.ToLongDateString()</a>
                     </div>
+
+                    <div class="col row fecha">
+                        <p>@coment.Fecha.ToShortTimeString()</p>
+                        <p>-</p>
+                        <p>@coment.Fecha.ToLongDateString()</p>
+                    </div>
+
                     <div class="col-2">
                         <div class="dropdown">
                             <button class="btn-sm" type="button" id="publi-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -111,7 +121,7 @@
                         <div class="col">
                             <form asp-action="Like" asp-route-id="@coment.ComentarioID">
                                     <input type="hidden" name="tipo" value="coment">
-                                    <button type="submit" class="btn btn-info">
+                                    <button type="submit">
                                         <i class="far fa-heart"></i>
                                     </button>
                             </form>
@@ -134,7 +144,7 @@
         </div> <!--row-->
     </div> <!--card bg-info-->
 
-
+    <br>
 
     @foreach(var resp in Model.Respuesta)
     {
@@ -152,12 +162,16 @@
                     <div class="col">
 
                         <div class="card-header row">
-                            <div class="col">
+                            <div class="col-4">
                                 <a asp-action="Perfil">@resp.UsuarioID</a>
-                                <a>@resp.Fecha.ToShortTimeString()</a>
-                                <a> · </a>
-                                <a>@resp.Fecha.ToLongDateString()</a>
                             </div>
+
+                            <div class="col row fecha">
+                                <p>@resp.Fecha.ToShortTimeString()</p>
+                                <p>-</p>
+                                <p>@resp.Fecha.ToLongDateString()</p>
+                            </div>
+
                             <div class="col-2">
                                 <div class="dropdown">
                                     <button class="btn-sm" type="button" id="publi-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -183,7 +197,7 @@
                                 <div class="col">
                                     <form asp-action="Like" asp-route-id="@resp.RespuestaID">
                                         <input type="hidden" name="tipo" value="resp">
-                                        <button type="submit" class="btn btn-info">
+                                        <button type="submit">
                                             <i class="far fa-heart"></i>
                                         </button>
                                     </form>
@@ -204,17 +218,15 @@
             <div class="form-group">
                 <input class="form-control" name="texto" placeholder="Responder" required/>
             </div>
-        <input type="submit" class="btn btn-primary" value="Enviar"/>
+        <input type="submit" class="btn btn-primary" value="Responder"/>
     </form>
+    <br>
     <br>
 }
 
 <br>
 <form method="post" asp-action="CrearComent" asp-route-id="@Model.Publicacion.PublicacionID">
-    <div class="form-group">
-        <label for="texto">Texto</label>
-        <input class="form-control" name="texto" placeholder="Publicar" required/>
-    </div>
-    <input type="submit" class="btn btn-primary" value="Enviar"/>
+    <input class="form-control" name="texto" placeholder="Escribir comentario..." required/>
+    <input type="submit" class="btn btn-info" value="Comentar"/>
 </form>
 <br>

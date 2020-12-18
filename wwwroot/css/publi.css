@@ -47,3 +47,21 @@ a{
     border: none;
     outline: none;
 }
+
+.fecha{
+    margin-left: 70px;
+}
+
+i{
+    color: white;
+}
+
+button{
+    background: none;
+    border: none;
+}
+
+textarea{
+    margin-top: 20px;
+    width: 100%;
+}

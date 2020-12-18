@@ -63,12 +63,13 @@ namespace Publicaciones.Models
         public IEnumerable<Respuesta> Respuesta {get;set;}
         public IEnumerable<Like> Like {get;set;}
     }
-    public class IndexViewModel
+    public class MainViewModel
     {
+        public IEnumerable<Usuario> Usuario {get;set;}
         public IEnumerable<Publicacion> Publicacion {get;set;}
+        public IEnumerable<Comentario> Comentario {get;set;}
         public IEnumerable<Seguido> Seguido {get;set;}
         public IEnumerable<Seguidor> Seguidor {get;set;}
-        public IEnumerable<Comentario> Comentario {get;set;}
         public IEnumerable<Like> Like {get;set;}
     }
 }

@@ -27,7 +27,7 @@ namespace Publicaciones.Controllers
         public IActionResult Index()
         {
             Usuario u_sesion = HttpContext.Session.Get<Usuario>("UsuarioLogueado");
-            var m = new IndexViewModel();
+            var m = new MainViewModel();
             var p = new List<Publicacion>();
             m.Seguido = db.Seguido.Where(s => s.UsuarioID == u_sesion.UsuarioID).ToList();
             foreach(var publi in db.Publicacion.ToList())
@@ -46,7 +46,10 @@ namespace Publicaciones.Controllers
         }
         public IActionResult Perfil()
         {
-            return View();
+            Usuario u_sesion = HttpContext.Session.Get<Usuario>("UsuarioLogueado");
+            var m = new MainViewModel();
+
+            return View(m);
         }
         public IActionResult Publicacion(int ID)
         {
@@ -168,7 +171,7 @@ namespace Publicaciones.Controllers
             };
             db.Comentario.Add(comentario);
             db.SaveChanges();
-            return Json(db.Comentario.ToList());
+            return RedirectToAction("Index");
         }
         public IActionResult BorrarComent (int ID)
         {
@@ -178,7 +181,7 @@ namespace Publicaciones.Controllers
             }
             db.Comentario.Remove(db.Comentario.Find(ID));
             db.SaveChanges();
-            return Json(db.Comentario.ToList());
+            return RedirectToAction("Index");
         }
         public IActionResult CrearResp (string texto, int ID)
         {
